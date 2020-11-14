@@ -3,10 +3,13 @@ var bodyParser = require('body-parser')
 var app = express()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
+var mongoose = require('mongoose')
 
 app.use(express.static(__dirname))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
+
+var dbUrl = 'mongodb+srv://shield:<talktomenow>@cluster0.g1fac.mongodb.net/<Cluster0>?retryWrites=true&w=majority'
 
 var messages = [
     {name: 'Ness', message: 'Hello'},
@@ -23,6 +26,10 @@ app.post('/messages', (req, res)=>{
 
 io.on('connection', (socket) => {
     console.log('a user connected')
+})
+
+mongoose.connect(dbUrl, (err)=>{
+    console.log('mongo db connection', err)
 })
 
 var server = http.listen(3000, () => {
